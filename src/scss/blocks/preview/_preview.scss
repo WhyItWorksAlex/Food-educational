@@ -61,11 +61,14 @@
     &__item {
         font-weight: bold;
         font-size: 18px;
+        line-height: 25px;
         font-weight: 300;
         margin-top: 10px;
         color: rgba(0, 0, 0, 0.6);
         cursor: pointer;
-        transition: 0.3s all;
+        transition-property: all;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in-out;
         &_active {
             color: #000;
             font-size: 22px;

@@ -17,7 +17,7 @@ gulp.task("copy-html", () => {
 
 gulp.task("build-js", () => {
 	return gulp
-		.src("./src/js/main.js")
+		.src("./src/js/*.js")
 		.pipe(
 			webpack({
 				mode: "development",
@@ -97,7 +97,7 @@ gulp.task("prod", () => {
 	gulp.src("./src/icons/**/*.*").pipe(gulp.dest(dist + "/icons"));
 
 	gulp
-		.src("./src/js/main.js")
+		.src("./src/js/*.js")
 		.pipe(
 			webpack({
 				mode: "production",
@@ -140,3 +140,4 @@ gulp.task("prod", () => {
 });
 
 gulp.task("default", gulp.parallel("watch", "build"));
+
