@@ -104,5 +104,58 @@ window.addEventListener('DOMContentLoaded', () => {
 
   setClock('.timer', deadline)
 
+  // Модальное окно
+
+  const modalTriggers = document.querySelectorAll('[data-modal');
+  const modal = document.querySelector('.modal')
+  const modalCloseBtn = document.querySelector('[data-close]')
+  const modalInner = document.querySelector('.modal__dialog')
+
+  function closeModal () {
+    modal.classList.remove('modal__open')
+    document.body.style.overflow = ''
+    modalCloseBtn.removeEventListener('click', closeModal)
+    
+  }
+  
+  function openModal() {
+    if (!modal.classList.contains('modal__open')) {
+      modal.classList.add('modal__open');
+      modalCloseBtn.addEventListener('click', closeModal);
+      document.body.style.overflow = 'hidden';
+      clearInterval(modalTimerId);
+    }
+  };
+
+  modalTriggers.forEach((item) => {
+    item.addEventListener('click', openModal)
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal()
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape' && modal.classList.contains('modal__open')) {
+      closeModal()
+    }
+  });
+
+  const modalTimerId = setTimeout(openModal, '15000');
+
+  // document.documentElement.scrollHeight - это полная высота всего контента страницы
+  // document.documentElement.clientHeight - то, сколько мы видем на экране
+  // window.scrollY - то, сколько мы уже пролистами из общей длины документа
+
+  function showModalByScroll () {
+    if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      openModal()
+      window.removeEventListener('scroll', showModalByScroll);
+    }  
+  }
+
+  window.addEventListener('scroll', showModalByScroll);
 
 });
