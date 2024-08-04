@@ -144,7 +144,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // const modalTimerId = setTimeout(openModal, '15000');
+  const modalTimerId = setTimeout(openModal, '10000000');
 
   // document.documentElement.scrollHeight - это полная высота всего контента страницы
   // document.documentElement.clientHeight - то, сколько мы видем на экране
@@ -234,5 +234,63 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Отправка формы на сервер
+
+  const forms = document.querySelectorAll('form');
+
+  const message = {
+    loading: 'Загрузка',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...',
+  }
+
+  forms.forEach((form) => {
+    postData(form);
+  })
+
+  function postData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const statusMessage = document.createElement('div');
+      statusMessage.classList.add('status');
+      statusMessage.textContent = message.loading;
+      form.append(statusMessage);
+
+      const request = new XMLHttpRequest();
+
+      request.open('POST', 'server.php');
+
+      const formData = new FormData(form)
+ 
+      request.setRequestHeader('Content-type', 'application/json'); // Это ну нужно если отправляем FormData в базовом формате
+
+      const object = {};
+      formData.forEach((value, key) => {
+        object[key] = value;
+      })
+
+      const json = JSON.stringify(object)
+
+      request.send(json);
+
+      // request.send(formData);
+
+      request.addEventListener('load', () => {
+        if(request.status === 200) {
+          console.log(request.response);
+          console.log(object);
+          console.log(formData.keys());
+          statusMessage.textContent = message.success;
+          form.reset();
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 5000)
+        } else {
+          statusMessage.textContent = message.failure;
+        }
+      })
+    })
+  }
 
 });

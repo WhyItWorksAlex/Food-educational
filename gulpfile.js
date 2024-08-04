@@ -7,11 +7,13 @@ const postcss = require("gulp-postcss");
 const browsersync = require("browser-sync");
 
 const dist = "./dist";
+const distSecond = "C:/OSPanel/domains/Food";
 
 gulp.task("copy-html", () => {
 	return gulp
 		.src("./src/index.html")
 		.pipe(gulp.dest(dist))
+		.pipe(gulp.dest(distSecond))
 		.pipe(browsersync.stream());
 });
 
@@ -52,6 +54,7 @@ gulp.task("build-js", () => {
 			})
 		)
 		.pipe(gulp.dest(dist + "/js"))
+		.pipe(gulp.dest(distSecond + "/js"))
 		.pipe(browsersync.stream());
 });
 
@@ -60,15 +63,20 @@ gulp.task("build-sass", () => {
 		.src("./src/scss/**/*.scss")
 		.pipe(sass().on("error", sass.logError))
 		.pipe(gulp.dest(dist + "/css"))
+		.pipe(gulp.dest(distSecond + "/css"))
 		.pipe(browsersync.stream());
 });
 
 gulp.task("copy-assets", () => {
-	gulp.src("./src/icons/**/*.*").pipe(gulp.dest(dist + "/icons"));
+	gulp.src("./src/icons/**/*.*")
+	.pipe(gulp.dest(dist + "/icons"))
+	.pipe(gulp.dest(distSecond + "/icons"));
+	
 
 	return gulp
 		.src("./src/img/**/*.*")
 		.pipe(gulp.dest(dist + "/img"))
+		.pipe(gulp.dest(distSecond + "/img"))
 		.pipe(browsersync.stream());
 });
 
@@ -92,10 +100,9 @@ gulp.task(
 );
 
 gulp.task("prod", () => {
-	gulp.src("./src/index.html").pipe(gulp.dest(dist));
-	gulp.src("./src/img/**/*.*").pipe(gulp.dest(dist + "/img"));
-	gulp.src("./src/icons/**/*.*").pipe(gulp.dest(dist + "/icons"));
-
+	gulp.src("./src/index.html").pipe(gulp.dest(dist)).pipe(gulp.dest(distSecond));
+	gulp.src("./src/img/**/*.*").pipe(gulp.dest(dist + "/img")).pipe(gulp.dest(distSecond + "/img"));
+	gulp.src("./src/icons/**/*.*").pipe(gulp.dest(dist + "/icons")).pipe(gulp.dest(distSecond + "/icons"));
 	gulp
 		.src("./src/js/*.js")
 		.pipe(
@@ -129,14 +136,16 @@ gulp.task("prod", () => {
 				},
 			})
 		)
-		.pipe(gulp.dest(dist + "/js"));
+		.pipe(gulp.dest(dist + "/js"))
+		.pipe(gulp.dest(distSecond + "/js"));
 
 	return gulp
 		.src("./src/scss/style.scss")
 		.pipe(sass().on("error", sass.logError))
 		.pipe(postcss([autoprefixer()]))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest(dist + "/css"));
+		.pipe(gulp.dest(dist + "/css"))
+		.pipe(gulp.dest(distSecond + "/css"));
 });
 
 gulp.task("default", gulp.parallel("watch", "build"));
