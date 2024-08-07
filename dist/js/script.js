@@ -99,17 +99,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const modalTriggers = document.querySelectorAll('[data-modal');
   const modal = document.querySelector('.modal');
-  const modalCloseBtn = document.querySelector('[data-close]');
-  const modalInner = document.querySelector('.modal__dialog');
   function closeModal() {
-    modal.classList.remove('modal__open');
+    modal.classList.remove('show');
+    modal.classList.add('hide');
     document.body.style.overflow = '';
-    modalCloseBtn.removeEventListener('click', closeModal);
   }
   function openModal() {
-    if (!modal.classList.contains('modal__open')) {
-      modal.classList.add('modal__open');
-      modalCloseBtn.addEventListener('click', closeModal);
+    if (!modal.classList.contains('show')) {
+      modal.classList.add('show');
+      modal.classList.remove('hide');
       document.body.style.overflow = 'hidden';
       clearInterval(modalTimerId);
     }
@@ -119,12 +117,12 @@ window.addEventListener('DOMContentLoaded', () => {
     item.addEventListener('click', openModal);
   });
   modal.addEventListener('click', e => {
-    if (e.target === modal) {
+    if (e.target === modal || e.target.classList.contains('modal__close')) {
       closeModal();
     }
   });
   document.addEventListener('keydown', e => {
-    if (e.code === 'Escape' && modal.classList.contains('modal__open')) {
+    if (e.code === 'Escape' && modal.classList.contains('show')) {
       closeModal();
     }
   });
@@ -207,11 +205,93 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   ;
 
-  // Отправка формы на сервер
+  // Отправка формы на сервер через XMLHttpRequest
+
+  // const forms = document.querySelectorAll('form');
+
+  // const message = {
+  //   loading: 'img/form/spinner.svg',
+  //   success: 'Спасибо! Скоро мы с вами свяжемся',
+  //   failure: 'Что-то пошло не так...',
+  // }
+
+  // forms.forEach((form) => {
+  //   postData(form);
+  // })
+
+  // function postData(form) {
+  //   form.addEventListener('submit', (e) => {
+  //     e.preventDefault();
+
+  //     const statusMessage = document.createElement('img');
+  //     statusMessage.src = message.loading;
+  //     statusMessage.style.cssText = `
+  //       display: block;
+  //       margin: 0 auto;
+  //     `;
+
+  //     form.insertAdjacentElement('afterend', statusMessage)
+
+  //     const request = new XMLHttpRequest();
+
+  //     request.open('POST', 'server.php');
+
+  //     const formData = new FormData(form)
+
+  //     request.setRequestHeader('Content-type', 'application/json'); // Это не нужно если отправляем FormData в базовом формате
+
+  //     const object = {};
+  //     formData.forEach((value, key) => {
+  //       object[key] = value;
+  //     })
+
+  //     const json = JSON.stringify(object)
+
+  //     request.send(json);
+
+  //     // request.send(formData); // Если мы отправляем сразу объект FormData
+
+  //     request.addEventListener('load', () => {
+  //       if(request.status === 200) {
+  //         showThanksModal(message.success);
+  //         form.reset();
+  //       } else {
+  //         showThanksModal(message.failure);
+  //       }
+  //     statusMessage.remove()
+  //     })
+  //   })
+  // };
+
+  // function showThanksModal(message) {
+  //   const prevModalDialog = document.querySelector('.modal__dialog');
+
+  //   prevModalDialog.classList.add('hide');
+  //   openModal();
+
+  //   const thanksModal = document.createElement('div');
+  //   thanksModal.classList.add('modal__dialog');
+  //   thanksModal.innerHTML = `
+  //     <div class="modal__content">
+  //       <div data-close class="modal__close">&times;</div>
+  //       <div class="modal__title">${message}</div>
+  //     </div>
+  //   `
+
+  //   document.querySelector('.modal').append(thanksModal);
+  //   setTimeout(() => {
+  //     thanksModal.remove();
+  //     prevModalDialog.classList.add('show');
+  //     prevModalDialog.classList.remove('hide');
+  //     closeModal();
+  //   }, 4000)
+  // };
+
+  // Отправка формы на сервер через Fetch
 
   const forms = document.querySelectorAll('form');
   const message = {
-    loading: 'Загрузка',
+    loading: 'img/form/spinner.svg',
     success: 'Спасибо! Скоро мы с вами свяжемся',
     failure: 'Что-то пошло не так...'
   };
@@ -221,40 +301,80 @@ window.addEventListener('DOMContentLoaded', () => {
   function postData(form) {
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const statusMessage = document.createElement('div');
-      statusMessage.classList.add('status');
-      statusMessage.textContent = message.loading;
-      form.append(statusMessage);
-      const request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
+      const statusMessage = document.createElement('img');
+      statusMessage.src = message.loading;
+      statusMessage.style.cssText = `
+        display: block;
+        margin: 0 auto;
+      `;
+      form.insertAdjacentElement('afterend', statusMessage);
       const formData = new FormData(form);
-      request.setRequestHeader('Content-type', 'application/json'); // Это ну нужно если отправляем FormData в базовом формате
-
       const object = {};
       formData.forEach((value, key) => {
         object[key] = value;
       });
-      const json = JSON.stringify(object);
-      request.send(json);
-
-      // request.send(formData);
-
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
-          console.log(object);
-          console.log(formData.keys());
-          statusMessage.textContent = message.success;
-          form.reset();
-          setTimeout(() => {
-            statusMessage.remove();
-          }, 5000);
-        } else {
-          statusMessage.textContent = message.failure;
-        }
+      fetch('server1.php', {
+        method: "POST",
+        headers: {
+          // headers нужны только для JSON, для FormData не нужны
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(object)
+      }).then(data => data.text()).then(data => {
+        console.log(data);
+        showThanksModal(message.success);
+        form.reset();
+      }).catch(() => {
+        showThanksModal(message.failure);
+      }).finally(() => {
+        statusMessage.remove();
       });
     });
   }
+  ;
+  function showThanksModal(message) {
+    const prevModalDialog = document.querySelector('.modal__dialog');
+    prevModalDialog.classList.add('hide');
+    openModal();
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
+      <div class="modal__content">
+        <div data-close class="modal__close">&times;</div>
+        <div class="modal__title">${message}</div>
+      </div>
+    `;
+    document.querySelector('.modal').append(thanksModal);
+    setTimeout(() => {
+      thanksModal.remove();
+      prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
+      closeModal();
+    }, 4000);
+  }
+  ;
+  const ans = [{
+    name: 'apple',
+    price: 200
+  }, {
+    name: 'pear',
+    price: 300
+  }, {
+    name: 'plum',
+    price: 500
+  }];
+  const result = ans.reduce((acc, cur, i) => {
+    const name = cur.name;
+    if (name !== 'pear') {
+      acc.push({
+        name: cur.name,
+        price: cur.price
+      });
+    }
+    return acc;
+  }, []);
+  console.log(ans);
+  console.log(result);
 });
 /******/ })()
 ;

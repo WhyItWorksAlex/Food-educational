@@ -57,6 +57,10 @@ a {
   font-weight: 400;
 }
 
+.show {
+  display: block;
+}
+
 .hide {
   display: none;
 }
@@ -589,7 +593,6 @@ a {
   top: 0;
   left: 0;
   z-index: 1050;
-  display: none;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -638,9 +641,6 @@ a {
   text-align: center;
   padding: 0 20px;
   outline: none;
-}
-.modal__open {
-  display: block;
 }
 .modal .btn {
   display: block;
