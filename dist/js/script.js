@@ -185,14 +185,30 @@ window.addEventListener('DOMContentLoaded', () => {
       this.parent.append(element);
     }
   }
-  getResource('http://localhost:3000/menu').then(data => {
+
+  // Получение данные через fetch API
+
+  // getResource('http://localhost:3000/menu')
+  //   .then(data => {
+  //     for (let {img, altimg, title, descr, price} of data) {
+  //       if (altimg === 'elite') {
+  //         new MenuCard(img, altimg, title, descr, price, '.menu .container', 'menu__item', 'any-new-class').render(); // Просто для примера if
+  //       } else {
+  //         new MenuCard(img, altimg, title, descr, price, '.menu .container', 'menu__item').render();
+  //       }
+  //     };
+  //   })
+
+  // Получение данных через библиотеку AXIOS
+
+  axios.get('http://localhost:3000/menu').then(data => {
     for (let {
       img,
       altimg,
       title,
       descr,
       price
-    } of data) {
+    } of data.data) {
       if (altimg === 'elite') {
         new MenuCard(img, altimg, title, descr, price, '.menu .container', 'menu__item', 'any-new-class').render(); // Просто для примера if
       } else {
@@ -362,7 +378,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
   ;
-  fetch('http://localhost:3000/menu').then(data => data.json()).then(res => console.log(res));
 });
 /******/ })()
 ;
