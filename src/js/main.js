@@ -156,40 +156,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', showModalByScroll);
 
-  // Использование классов для карточек
+  // Использование классов для создания карточек (аналог функции конструктора)
 
-  const mock = [
-    {
-      src: "img/tabs/vegy.jpg",
-      alt: "vegy",
-      title: 'Меню "Фитнес"',
-      descr: 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-      price: 9,
-    },
-    {
-      src: "img/tabs/elite.jpg",
-      alt: "elite",
-      title: 'Меню “Премиум”',
-      descr: 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-      price: 20,
-    },
-    {
-      src: "img/tabs/post.jpg",
-      alt: "post",
-      title: 'Меню "Постное"',
-      descr: 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-      price: 16,
-    },
-  ];
+  const getResource = async (url) => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
+
+    return res.json();
+  }
 
   class MenuCard {
-    constructor(src, alt, title, descr, price, ...classes) {
+    constructor(src, alt, title, descr, price, parent, ...classes) {
       this.src = src;
       this.alt = alt;
       this.title = title;
       this.descr = descr;
       this.price = price;
       this.classes = classes;
+      this.parent = document.querySelector(parent);
       this.transfer = 27; // курс валюты 
       this.changeToUAH()
     }
@@ -219,17 +206,20 @@ window.addEventListener('DOMContentLoaded', () => {
             <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
         </div>
       `;
-      document.querySelector('.menu .container').append(element);
+      this.parent.append(element);
     }
   }
 
-  for (let item of mock) {
-    if (item.alt === 'elite') {
-      new MenuCard(...Object.values(item), 'menu__item', 'bigs').render();
-    } else {
-      new MenuCard(...Object.values(item), 'menu__item').render();
-    }
-  };
+  getResource('http://localhost:3000/menu')
+    .then(data => {
+      for (let {img, altimg, title, descr, price} of data) {
+        if (altimg === 'elite') {
+          new MenuCard(img, altimg, title, descr, price, '.menu .container', 'menu__item', 'any-new-class').render(); // Просто для примера if
+        } else {
+          new MenuCard(img, altimg, title, descr, price, '.menu .container', 'menu__item').render();
+        }
+      };
+    })
 
   // Отправка формы на сервер через XMLHttpRequest
 
@@ -324,10 +314,22 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   forms.forEach((form) => {
-    postData(form);
+    bindPostData(form);
   })
 
-  function postData(form) {
+  const postData = async (url, data) => {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {                               // headers нужны только для JSON, для FormData не нужны
+        'Content-type': 'application/json'
+      },
+      body: data,
+    });
+
+    return res.json();
+  }
+
+  function bindPostData(form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -342,19 +344,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const formData = new FormData(form)
 
-      const object = {};
-      formData.forEach((value, key) => {
-        object[key] = value;
-      })
+      // Первый способ сделать json из Form Data
 
-      fetch('server1.php', {
-        method: "POST",
-        headers: {                               // headers нужны только для JSON, для FormData не нужны
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify(object),
-      })
-      .then(data => data.text())
+      // const object = {};
+      // formData.forEach((value, key) => {
+      //   object[key] = value;
+      // })
+      // const json = JSON.stringify(object)
+
+      // Второй способ сделать json из Form Data
+      
+      const json = JSON.stringify(Object.fromEntries(formData.entries()))
+
+      postData('http://localhost:3000/requests', json)
       .then((data) => {
           console.log(data);
           showThanksModal(message.success);
@@ -392,5 +394,10 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }, 4000)
   };
+
+  fetch('http://localhost:3000/menu')
+    .then(data => data.json())
+    .then(res => console.log(res))
+
 
 });
