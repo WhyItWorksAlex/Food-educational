@@ -378,6 +378,64 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
   ;
+
+  // Простая реализация слайдера
+
+  const slider = document.querySelector('.offer__slider');
+  const prevBtn = slider.querySelector('.offer__slider-prev');
+  const nextBtn = slider.querySelector('.offer__slider-next');
+  const numberCurrentSlide = slider.querySelector('#current');
+  const totalSlides = slider.querySelector('#total');
+  const slides = slider.querySelectorAll('.offer__slide');
+  function initSlider() {
+    countTotalSlides();
+    numberCurrentSlide.textContent = `0${Number(numberCurrentSlide.textContent) + 1}`;
+    for (let i = 0; i < slides.length; i++) {
+      if (i >= 1) {
+        slides[i].classList.add('hide');
+      }
+    }
+  }
+  initSlider();
+  function countTotalSlides() {
+    if (slides.length <= 9) {
+      totalSlides.textContent = `0${slides.length}`;
+    } else {
+      totalSlides.textContent = slides.length;
+    }
+  }
+  function handleNextSlide() {
+    if (Number(numberCurrentSlide.textContent) !== Number(totalSlides.textContent)) {
+      if (Number(numberCurrentSlide.textContent) >= 9) {
+        numberCurrentSlide.textContent = Number(numberCurrentSlide.textContent) + 1;
+      } else {
+        numberCurrentSlide.textContent = `0${Number(numberCurrentSlide.textContent) + 1}`;
+      }
+      slides[Number(numberCurrentSlide.textContent) - 1].classList.remove('hide');
+      slides[Number(numberCurrentSlide.textContent) - 2].classList.add('hide');
+    } else {
+      numberCurrentSlide.textContent = `01`;
+      slides[0].classList.remove('hide');
+      slides[slides.length - 1].classList.add('hide');
+    }
+  }
+  function handlePrevSlide() {
+    if (Number(numberCurrentSlide.textContent) !== 1) {
+      if (Number(numberCurrentSlide.textContent) >= 11) {
+        numberCurrentSlide.textContent = Number(numberCurrentSlide.textContent) - 1;
+      } else {
+        numberCurrentSlide.textContent = `0${Number(numberCurrentSlide.textContent) - 1}`;
+      }
+      slides[Number(numberCurrentSlide.textContent) - 1].classList.remove('hide');
+      slides[Number(numberCurrentSlide.textContent)].classList.add('hide');
+    } else {
+      numberCurrentSlide.textContent = Number(slides.length);
+      slides[slides.length - 1].classList.remove('hide');
+      slides[0].classList.add('hide');
+    }
+  }
+  nextBtn.addEventListener('click', handleNextSlide);
+  prevBtn.addEventListener('click', handlePrevSlide);
 });
 /******/ })()
 ;
