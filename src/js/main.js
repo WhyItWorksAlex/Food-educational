@@ -419,6 +419,22 @@ window.addEventListener('DOMContentLoaded', () => {
   const totalSlides = slider.querySelector('#total');
   const slides = slider.querySelectorAll('.offer__slide');
 
+  // Точки слайдера
+
+  slider.style.position = 'relative';
+
+  const dotsWrapper = document.createElement('ol');
+  dotsWrapper.classList.add('carousel-indicators');
+  for (let i = 0; i < slides.length; i++) {
+    const dot = document.createElement('li');
+    dot.classList.add('dot');
+    dot.addEventListener('click', () => {
+      changeSlide(curSlide = i + 1)
+    })
+    dotsWrapper.append(dot);
+  }
+  slider.append(dotsWrapper);
+
   // Слайдер с прокруткой влево - вправо
 
   const sliderWrapper = slider.querySelector('.offer__slider-wrapper')
@@ -455,6 +471,14 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
       totalSlides.textContent = slides.length;
     }
+
+    dotsWrapper.querySelectorAll('.dot').forEach((dot, index) => {
+      if (index === (curSlide - 1)) {
+        dot.style.opacity = '1'
+      } else {
+        dot.style.opacity = '0.5';
+      }
+    })
     
     sliderContent.style.transform = `translateX(${-(width.slice(0,-2)) * (curSlide - 1)}px)`
   }
@@ -468,6 +492,9 @@ window.addEventListener('DOMContentLoaded', () => {
   prevBtn.addEventListener('click', () => {
     changeSlide(curSlide -= 1)
   })
+
+  
+  
 
   // Обычный слайдер по примеру
 
