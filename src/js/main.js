@@ -695,7 +695,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // .then(res => {console.log(res.data.results.map(hero => hero.id))
   // })
 
-  fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
+  fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100&offset=44')
   .then(response => {
     if (!response.ok) {
       throw new Error(`Could not fetch, status: ${response.status}`);
