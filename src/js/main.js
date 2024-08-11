@@ -703,7 +703,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     return response.json();
   })
-  .then(data => console.log(data))
+  .then(res => {
+    const result = res.data.results.map(hero => hero.id)
+    return console.log(result)
+  })
   .catch(() => console.log('Error'))
 
 });

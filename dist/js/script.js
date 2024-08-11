@@ -638,7 +638,10 @@ window.addEventListener('DOMContentLoaded', () => {
       throw new Error(`Could not fetch, status: ${response.status}`);
     }
     return response.json();
-  }).then(data => console.log(data)).catch(() => console.log('Error'));
+  }).then(res => {
+    const result = res.data.results.map(hero => hero.id);
+    return console.log(result);
+  }).catch(() => console.log('Error'));
 });
 /******/ })()
 ;
