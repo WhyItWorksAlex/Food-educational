@@ -628,6 +628,9 @@ window.addEventListener('DOMContentLoaded', () => {
     initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
   }
   initCalc();
+  axios.get('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18').then(data => {
+    console.log(data);
+  });
 });
 /******/ })()
 ;
