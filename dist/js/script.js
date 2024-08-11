@@ -632,7 +632,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // 'https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100'
 
   const getData = async () => {
-    const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?limit=5&offset=5&apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100&offset=538');
+    const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?limit=1&offset=200&apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100&offset=538');
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
@@ -640,7 +640,7 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   const getCharacter = async () => {
     const dataHero = await getData();
-    const newData = dataHero.data.results[0];
+    const newData = dataHero.data.results;
     return console.log(newData);
   };
   getCharacter();
