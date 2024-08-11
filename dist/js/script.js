@@ -629,19 +629,45 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   initCalc();
 
-  // axios.get('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
-  // .then(res => {console.log(res.data.results.map(hero => hero.id))
-  // })
+  // 'https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100'
 
-  fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100&offset=44').then(response => {
+  const getData = async () => {
+    const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100');
     if (!response.ok) {
-      throw new Error(`Could not fetch, status: ${response.status}`);
+      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
-    return response.json();
-  }).then(res => {
-    const result = res.data.results.map(hero => hero.id);
-    return console.log(result);
-  }).catch(() => console.log('Error'));
+    return await response.json();
+  };
+  const getCharacter = async () => {
+    const dataHero = await getData();
+    const newData = dataHero.data.results[0];
+    return {
+      name: newData.name,
+      reduceDescr,
+      descr: descr,
+      thumbnail: newData.thumbnail.path + `.${dataHero.thumbnail.extension}`,
+      wiki: newData.urls[0].url,
+      homepage: newData.urls[1].url,
+      comics: newData.comics.items
+    };
+  };
+  console.log(getCharacter());
+
+  // getHeroData = (data) => {
+  //   const dataHero = data.data.results[0],
+  //         reduceDescr = dataHero.description ? dataHero.description.slice(0, 150) + '...' : "does not contain a description",
+  //         descr = dataHero.description ? dataHero.description : "does not contain a description";
+
+  //   return {
+  //       name: dataHero.name,
+  //       reduceDescr,
+  //       descr: descr,
+  //       thumbnail: dataHero.thumbnail.path + `.${dataHero.thumbnail.extension}`,
+  //       wiki: dataHero.urls[0].url,
+  //       homepage: dataHero.urls[1].url,
+  //       comics: dataHero.comics.items,
+  //   }
+  // }
 });
 /******/ })()
 ;
