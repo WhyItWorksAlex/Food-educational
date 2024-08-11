@@ -696,4 +696,9 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log(data);
   })
 
+  fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(() => console.log('Error'))
+
 });
