@@ -692,8 +692,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initCalc();
 
   axios.get('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
-  .then(data => {
-    console.log(data.data.results[0]);
+  .then(res => {console.log(res.data.results.map(hero => hero.id))
   })
 
   // fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
