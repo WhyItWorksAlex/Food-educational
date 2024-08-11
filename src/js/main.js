@@ -691,13 +691,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
   initCalc();
 
-  axios.get('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
-  .then(res => {console.log(res.data.results.map(hero => hero.id))
-  })
+  // axios.get('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
+  // .then(res => {console.log(res.data.results.map(hero => hero.id))
+  // })
 
-  // fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
-  // .then(response => response.json())
-  // .then(data => console.log(data))
-  // .catch(() => console.log('Error'))
+  fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Could not fetch, status: ${response.status}`);
+    }
+
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(() => console.log('Error'))
 
 });
