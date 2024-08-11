@@ -643,8 +643,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const newData = dataHero.data.results[0];
     return {
       name: newData.name,
-      reduceDescr,
-      descr: descr,
       thumbnail: newData.thumbnail.path + `.${dataHero.thumbnail.extension}`,
       wiki: newData.urls[0].url,
       homepage: newData.urls[1].url,
