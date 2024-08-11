@@ -708,11 +708,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const newData = dataHero.data.results[0];
 
           
-    return newData;
+    return console.log(newData);
   }
   
 
-  console.log(getCharacter())
+  getCharacter();
 
   // getHeroData = (data) => {
   //   const dataHero = data.data.results[0],
