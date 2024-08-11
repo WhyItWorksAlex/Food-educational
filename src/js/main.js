@@ -694,7 +694,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // 'https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100'
 
   const getData = async () => {
-    const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100');
+    const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18');
 
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
