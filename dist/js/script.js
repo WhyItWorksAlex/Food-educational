@@ -641,13 +641,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const getCharacter = async () => {
     const dataHero = await getData();
     const newData = dataHero.data.results[0];
-    return {
-      name: newData.name,
-      thumbnail: newData.thumbnail.path + `.${dataHero.thumbnail.extension}`,
-      wiki: newData.urls[0].url,
-      homepage: newData.urls[1].url,
-      comics: newData.comics.items
-    };
+    return newData;
   };
   console.log(getCharacter());
 
