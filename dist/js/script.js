@@ -629,37 +629,47 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   initCalc();
 
-  // 'https://gateway.marvel.com:443/v1/public/characters?apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100'
+  // Данные с сайта марвел
 
-  const getData = async () => {
-    const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?limit=1&offset=200&apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100&offset=538');
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
-    }
-    return await response.json();
-  };
-  const getCharacter = async () => {
-    const dataHero = await getData();
-    const newData = dataHero.data.results;
-    return console.log(newData);
-  };
-  getCharacter();
+  // const getData = async () => {
+  //   const response = await fetch('https://gateway.marvel.com:443/v1/public/characters?limit=1&offset=200&apikey=7750d6729f9a98f9e26a89628b1eac18&limit=100&offset=538');
 
-  // getHeroData = (data) => {
-  //   const dataHero = data.data.results[0],
-  //         reduceDescr = dataHero.description ? dataHero.description.slice(0, 150) + '...' : "does not contain a description",
-  //         descr = dataHero.description ? dataHero.description : "does not contain a description";
-
-  //   return {
-  //       name: dataHero.name,
-  //       reduceDescr,
-  //       descr: descr,
-  //       thumbnail: dataHero.thumbnail.path + `.${dataHero.thumbnail.extension}`,
-  //       wiki: dataHero.urls[0].url,
-  //       homepage: dataHero.urls[1].url,
-  //       comics: dataHero.comics.items,
+  //   if (!response.ok) {
+  //     throw new Error(`Could not fetch ${url}, status: ${response.status}`);
   //   }
+
+  //   return await response.json();
   // }
+
+  // const getCharacter = async () => {
+  //   const dataHero = await getData();
+  //   const newData = dataHero.data.results;
+
+  //   return console.log(newData);
+  // }
+
+  // getCharacter();
+
+  // Данные с отдельного сервера
+
+  // function getHeroData(id) {
+  //   const url = `https://superheroapi.com/api.php/8c5c7cad236740defc0bb7b95c4e81e6/${id}`;
+  //   fetch(url)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //     });
+  // }
+
+  // getHeroData(535)
+
+  const getHeroData = () => {
+    const url = `https://superheroapi.com/api.php/8c5c7cad236740defc0bb7b95c4e81e6/535`;
+    fetch(url).then(response => {
+      return response.json();
+    }).then(data => console.log(data));
+  };
+  getHeroData();
 });
 /******/ })()
 ;
