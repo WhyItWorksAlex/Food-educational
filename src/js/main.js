@@ -706,6 +706,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const getCharacter = async () => {
     const dataHero = await getData();
     const newData = dataHero.data.results[0];
+    
           
     return {
         name: newData.name,
