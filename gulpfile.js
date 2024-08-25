@@ -19,12 +19,12 @@ gulp.task("copy-html", () => {
 
 gulp.task("build-js", () => {
 	return gulp
-		.src("./src/js/*.js")
+		.src("./src/js/main.js")
 		.pipe(
 			webpack({
 				mode: "development",
 				output: {
-					filename: "script.js",
+					filename: 'bundle.js',
 				},
 				watch: false,
 				devtool: "source-map",
@@ -104,12 +104,12 @@ gulp.task("prod", () => {
 	gulp.src("./src/img/**/*.*").pipe(gulp.dest(dist + "/img")).pipe(gulp.dest(distSecond + "/img"));
 	gulp.src("./src/icons/**/*.*").pipe(gulp.dest(dist + "/icons")).pipe(gulp.dest(distSecond + "/icons"));
 	gulp
-		.src("./src/js/*.js")
+		.src("./src/js/main.js")
 		.pipe(
 			webpack({
 				mode: "production",
 				output: {
-					filename: "script.js",
+					filename: 'bundle.js',
 				},
 				module: {
 					rules: [
@@ -149,4 +149,5 @@ gulp.task("prod", () => {
 });
 
 gulp.task("default", gulp.parallel("watch", "build"));
+
 
